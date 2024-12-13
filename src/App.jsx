@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from "motion/react"
-import './App.css'
 import Tile from './Tile'
 import Button from './Button'
 import Category from './Category'
