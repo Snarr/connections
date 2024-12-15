@@ -26,5 +26,3 @@ dist-ssr
 /legacy/*
 
 *.woff2
-
-GameDetails.json
