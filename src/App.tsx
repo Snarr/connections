@@ -9,16 +9,17 @@ import Mistake from './Mistake'
 
 import RawGame from './GameDetails'
 import { TileModel, CategoryModel } from './Types'
+import Splash from './Splash'
 
 function importTileList(): TileModel[] {
-  let newTilesList: TileModel[] = []
+  const newTilesList: TileModel[] = []
   for (let i = 0; i < 16; i++) {
     newTilesList.push({"word": "", selected: false})
   }
 
   RawGame.categories.forEach(importedCategory => {
     importedCategory.words.forEach(importedCard => {
-      let newTile: TileModel = {
+      const newTile: TileModel = {
         word: importedCard.word,
         selected: false
       }
@@ -30,10 +31,10 @@ function importTileList(): TileModel[] {
 }
 
 function importCategories(): CategoryModel[] {
-  let categories: CategoryModel[] = []
+  const categories: CategoryModel[] = []
 
   RawGame.categories.forEach(category => {
-    let newCategory: CategoryModel = {
+    const newCategory: CategoryModel = {
       title: category.title,
       color: category.color,
       words: []
@@ -52,11 +53,18 @@ function importCategories(): CategoryModel[] {
 const categoryList: CategoryModel[] = importCategories()
 const initialTileList: TileModel[] = importTileList()
 
+enum ScreenEnum {
+  Splash,
+  Game,
+  Results
+}
+
 function App() {
 
   const [points, setPoints] = useState<number>(4)
   const [tileList, setTileList] = useState<TileModel[]>(initialTileList)
   const [revealedCategories, setRevealedCategories] = useState<CategoryModel[]>([])
+  const [screen, setScreen] = useState<ScreenEnum>(ScreenEnum.Splash)
 
   const selectedWords = useMemo(
     () => getSelectedWords(tileList),
@@ -64,7 +72,7 @@ function App() {
   );
 
   function getSelectedWords(tiles: TileModel[]): string[] {
-    let selectedWordList: string[] = []
+    const selectedWordList: string[] = []
 
     tiles.forEach(tile => {
       if (tile.selected) {
@@ -77,7 +85,7 @@ function App() {
 
   const shuffle = () => {
     setTileList(prevTiles => {
-      let newTiles = [...prevTiles];
+      const newTiles = [...prevTiles];
 
       for (let i = 0; i < newTiles.length-1; i++) {
         const j = Math.floor(Math.random()*(newTiles.length-i)) + i;
@@ -105,11 +113,11 @@ function App() {
     let correctCategory: CategoryModel | null = null
 
     for (let i = 0; i < categoryList.length; i++) {
-      let category = categoryList[i]
+      const category = categoryList[i]
       let correctCount = 0
 
       for (let j = 0; j < category.words.length; j++) {
-        let word = category.words[j]
+        const word = category.words[j]
         if (selectedWords.includes(word)) {
           correctCount++
           continue
@@ -143,10 +151,10 @@ function App() {
         )
 
         for (let i = 0; i < outOfPlaceTopRowWords.length; i++) {
-          let outOfPlaceTopRowWord: string = outOfPlaceTopRowWords[i]
+          const outOfPlaceTopRowWord: string = outOfPlaceTopRowWords[i]
           let outOfPlaceTopRowWordIndex: number = -1;
 
-          let outOfPlaceCategoryWord: string = outOfPlaceCategoryWords[i]
+          const outOfPlaceCategoryWord: string = outOfPlaceCategoryWords[i]
           let outOfPlaceCategoryWordIndex: number = -1;
 
           newTileList.forEach((tile, index) => {
@@ -157,7 +165,7 @@ function App() {
             }
           })
 
-          let temp = newTileList[outOfPlaceTopRowWordIndex]
+          const temp = newTileList[outOfPlaceTopRowWordIndex]
           newTileList[outOfPlaceTopRowWordIndex] = newTileList[outOfPlaceCategoryWordIndex]
           newTileList[outOfPlaceCategoryWordIndex] = temp
         }
@@ -167,7 +175,7 @@ function App() {
       }
 
       setTimeout(() => {
-        let removeTileList = [...newTileList]
+        const removeTileList = [...newTileList]
 
         removeTileList.splice(0, 4)
 
@@ -178,12 +186,18 @@ function App() {
         }
 
         deselectAll()
+
+        if (tileList.length == 4) {
+          setTimeout(() => {
+            setScreen(ScreenEnum.Results)
+          }, 1500)
+        } 
       }, tileList.length == 4 ? 50 : 500)
     }
 
   }
 
-  function toggleSelection (word: String): void {
+  function toggleSelection (word: string): void {
     setTileList((prevTiles: TileModel[]) => {
         return prevTiles.map((t) => {
           if (t.word == word) {
@@ -200,7 +214,11 @@ function App() {
 
   return (
     <AnimatePresence>
-      <motion.div layout className="flex flex-col gap-2 justify-center items-center w-full h-full">
+      {screen == ScreenEnum.Splash &&
+        <Splash key="splash" onClick={() => { setScreen(ScreenEnum.Game) }}></Splash>
+      }
+      {screen == ScreenEnum.Game &&
+      <motion.div key="game" transition={{duration: 2}} initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className="flex flex-col gap-2 justify-center items-center w-full h-full">
         <Title/>
         { revealedCategories.length > 0 ? <div className="w-fit h-fit flex-col flex gap-2">
           {revealedCategories.map((category) => 
@@ -229,6 +247,7 @@ function App() {
           <Button onClick={submit} disabled={selectedWords.length < 4}>Submit</Button>
         </div>
       </motion.div>
+      }     
     </AnimatePresence>
   )
 }
