@@ -7,7 +7,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        customFont: ["NYT"]
+        'nyt': ["nyt", "ui-sans-serif"],
+        'nyt-bold': ["nyt-bold", "ui-sans-serif"],
+        'karnak': ["karnak-bold", "ui-serif"],
       }
     },
   },

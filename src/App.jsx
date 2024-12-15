@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "motion/react"
 import Tile from './Tile'
 import Button from './Button'
 import Category from './Category'
+import Title from './Title'
+import Mistake from './Mistake'
 
 import gameDetails from './GameDetails.json'
 
@@ -36,7 +38,7 @@ function App() {
   }
   
   const deselectAll = () => {
-    setSelectedTiles([])
+    setSelectedTiles({})
   }
 
   const submit = () => {
@@ -72,7 +74,6 @@ function App() {
     if (correctCategory == null) {
       setPoints(prevPoints => prevPoints - 1)
     } else {
-      console.log("Test")
       let swappedTileSet = [...tiles]
       for (let i = 0; i < 4; i++) {
         swappedTileSet[swappedTileSet.indexOf(correctCategory.cards[i].content)] = swappedTileSet[i]
@@ -87,12 +88,26 @@ function App() {
 
         setTiles(removeTileSet)
 
-        setRevealedCategories((prevRevealedCategory) => [...prevRevealedCategory, correctCategory])
+        if (!revealedCategories.includes(correctCategory)) {
+          setRevealedCategories((prevRevealedCategory) => [...prevRevealedCategory, correctCategory])
+        }
 
         setSelectedTiles([])
       }, 500)
     }
 
+  }
+
+  const toggleSelection = (tile) => {
+    setSelectedTiles((prevSelectedTiles) => {
+      let newSelectedTiles = {...prevSelectedTiles}
+      if (Object.keys(newSelectedTiles).includes(tile)) {
+        delete newSelectedTiles[tile]
+      } else if (Object.keys(newSelectedTiles).length < 4) {
+        newSelectedTiles[tile] = true;
+      }
+      return newSelectedTiles
+    })
   }
 
   const [points, setPoints] = useState(4)
@@ -101,44 +116,37 @@ function App() {
   const [revealedCategories, setRevealedCategories] = useState([])
 
   return (
-    <div className="flex flex-col gap-2 justify-center items-center w-full h-fit p-10">
-      { revealedCategories.length > 0 ? <div className="w-fit h-fit flex-col flex gap-2">
-        {revealedCategories.map((category) => 
-          <Category key={category.title} category={category}></Category>
-        )}
-      </div> : null }
-      { revealedCategories.length < 4 ? <div className={`grid grid-rows-${4-revealedCategories} grid-cols-4 gap-2 w-fit h-fit`}>
-        {tiles.map((tile) =>
-          <Tile key={tile} isSelected={Object.keys(selectedTiles).includes(tile)} toggleSelection={() => {
-            setSelectedTiles((prevSelectedTiles) => {
-              let newSelectedTiles = {...prevSelectedTiles}
-              if (Object.keys(newSelectedTiles).includes(tile)) {
-                delete newSelectedTiles[tile]
-              } else if (Object.keys(newSelectedTiles).length < 4) {
-                newSelectedTiles[tile] = true;
-              }
-              return newSelectedTiles
-            })
-          }}>{tile}</Tile>
-        )}
-      </div> : null}
-      <div className="flex flex-row justify-center items-center gap-2 pt-2">
-        Mistakes remaining:
-        {[points > 0, points > 1, points > 2, points > 3].map((val, idx) => 
-          <AnimatePresence key={idx}>
-            {val ? 
-            <motion.div exit={{ opacity: 0, scale: 1.1 }} className="bg-[#5A594E] rounded-full w-5 h-5">
-              
-            </motion.div> : null}
-          </AnimatePresence>
-        )}
-      </div>
-      <div className="flex flex-row gap-3 p-2">
-        <Button onClick={shuffle}>Shuffle</Button>
-        <Button onClick={deselectAll}>Deselect All</Button>
-        <Button onClick={submit}>Submit</Button>
-      </div>
-    </div>
+    <AnimatePresence>
+      <motion.div layout className="flex flex-col gap-2 justify-center items-center w-full h-full">
+        <Title/>
+        { revealedCategories.length > 0 ? <div className="w-fit h-fit flex-col flex gap-2">
+          {revealedCategories.map((category) => 
+            <Category key={category.title} category={category}></Category>
+          )}
+        </div> : null }
+        { revealedCategories.length < 4 ? <div className={`grid grid-rows-${4-revealedCategories} grid-cols-4 gap-2 w-fit h-fit`}>
+          {tiles.map((tile) =>
+            <Tile
+            key={tile}
+            isSelected={Object.keys(selectedTiles).includes(tile)}
+            toggleSelection={() => { toggleSelection(tile)}}>{tile}</Tile>
+          )}
+        </div> : null}
+        
+        <div className="flex flex-row justify-center items-center gap-2 pt-2">
+          Mistakes remaining:
+          {[0,1,2,3].map((index) => 
+            <Mistake key={index} visible={points > index}></Mistake>
+          )}
+        </div>
+
+        <div className="flex flex-row gap-3 p-2">
+          <Button onClick={shuffle} disabled={Object.keys(revealedCategories).length == 4}>Shuffle</Button>
+          <Button onClick={deselectAll} disabled={Object.keys(selectedTiles).length == 0}>Deselect All</Button>
+          <Button onClick={submit} disabled={Object.keys(selectedTiles).length < 4}>Submit</Button>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   )
 }
 

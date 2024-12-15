@@ -16,11 +16,12 @@ function Category({category}) {
   return (
     <AnimatePresence>
       <motion.div 
-      className={`w-[624px] h-[80px] 
-      rounded-[6px] 
+      className={`lg:w-[624px] w-[364px] h-[85px] 
+      rounded-[6px]
+      lg:text-lg text-xs
       flex justify-center items-center flex-col
       cursor-pointer select-none 
-      font-NYT text-wrap text-center
+      font-nyt text-wrap text-center
       text-[#000000]`}
       style={{backgroundColor: category.color}}
       layout
@@ -28,15 +29,11 @@ function Category({category}) {
       animate={{ opacity: [1, 1, 1], scale: [0.5, 1.1, 1.0],
                  transition: { duration: 1, times: [0, 0.2, 0.4]} }}
       >
-        <span className="font-bold">{category.title.toUpperCase()}</span>
+        <span className="font-nyt-bold font-bold">{category.title.toUpperCase()}</span>
         <span>{getCategoryItems().toUpperCase()}</span>
       </motion.div>
     </AnimatePresence>
   )
-}
-
-Category.propTypes = {
-  category: PropTypes.object.isRequired
 }
 
 export default Category;

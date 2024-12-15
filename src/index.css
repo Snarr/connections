@@ -9,10 +9,20 @@
     src: url(/fonts/nyt.woff2) format('woff2');
   }
 
-
   @font-face {
     font-family: 'nyt-bold';
     font-weight: 600;
     src: url(/fonts/nyt-bold.woff2) format('woff2');
   }
+
+  @font-face {
+    font-family: 'karnak-bold';
+    font-weight: 600;
+    src: url(/fonts/karnak.woff2) format('woff2');
+  }
+}
+
+#root, body, html {
+  width: 100%;
+  height: 100%
 }
