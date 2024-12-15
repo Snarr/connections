@@ -1,8 +1,13 @@
-import PropTypes from 'prop-types';
+
 import { AnimatePresence, motion } from 'motion/react'
+import type { TileModel } from './Types';
 
-function Tile({children, isSelected, toggleSelection}) {
+interface TileProps {
+  tile: TileModel,
+  toggleSelection: () => void
+}
 
+const Tile: React.FC<TileProps> = ({tile, toggleSelection}) => {
   return (
     <AnimatePresence>
       <motion.div
@@ -15,11 +20,11 @@ function Tile({children, isSelected, toggleSelection}) {
         font-nyt-bold font-bold text-wrap text-center 
         lg:leading-5 leading-3 `
         +
-        (isSelected ? "bg-[#5A594E] text-[#FFFFFF]" : "bg-[#EFEFE6]")}
+        (tile.selected ? "bg-[#5A594E] text-[#FFFFFF]" : "bg-[#EFEFE6]")}
         layout
         exit={{ opacity: 0 }}
       >
-        {children.toUpperCase()}
+        {tile.word.toUpperCase()}
       </motion.div>
     </AnimatePresence>
   )

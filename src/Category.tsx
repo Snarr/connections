@@ -1,13 +1,18 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import PropTypes from 'prop-types';
+import type { CategoryModel } from './Types';
 
-function Category({category}) {
+
+interface CategoryProps {
+  category: CategoryModel
+}
+
+function Category({category}: CategoryProps) {
 
   const getCategoryItems = () => {
-    let str = category.cards[0].content
+    let str = category.words[0]
 
     for (let i = 1; i < 4; i++) {
-      str = `${str}, ${category.cards[i].content}`
+      str = `${str}, ${category.words[i]}`
     }
 
     return str

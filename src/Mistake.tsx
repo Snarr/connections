@@ -1,7 +1,10 @@
 import { motion, AnimatePresence } from 'motion/react';
-import PropTypes from 'prop-types';
 
-const Mistake = ({visible}) => {
+interface MistakeProps {
+  visible: boolean
+}
+
+const Mistake = ({visible}: MistakeProps) => {
   return (
     <AnimatePresence>
       <motion.div
