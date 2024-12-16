@@ -11,6 +11,9 @@ import RawGame from './GameDetails'
 import { TileModel, CategoryModel } from './Types'
 import Splash from './Splash'
 
+import Confetti from 'react-confetti'
+import useWindowSize from 'react-use/lib/useWindowSize'
+
 function importTileList(): TileModel[] {
   const newTilesList: TileModel[] = []
   for (let i = 0; i < 16; i++) {
@@ -61,10 +64,11 @@ enum ScreenEnum {
 
 function App() {
 
+  const { width, height } = useWindowSize()
   const [points, setPoints] = useState<number>(4)
   const [tileList, setTileList] = useState<TileModel[]>(initialTileList)
   const [revealedCategories, setRevealedCategories] = useState<CategoryModel[]>([])
-  const [screen, setScreen] = useState<ScreenEnum>(ScreenEnum.Splash)
+  const [screen, setScreen] = useState<ScreenEnum>(ScreenEnum.Results)
 
   const selectedWords = useMemo(
     () => getSelectedWords(tileList),
@@ -247,7 +251,15 @@ function App() {
           <Button onClick={submit} disabled={selectedWords.length < 4}>Submit</Button>
         </div>
       </motion.div>
-      }     
+      }
+      {screen == ScreenEnum.Results &&
+      <motion.div key="results" className="w-full h-full flex justify-center items-center">
+        <Confetti width={width} height={height} recycle={false} numberOfPieces={1000} tweenDuration={10000}></Confetti>
+        <div>
+          Hello
+        </div>
+      </motion.div>
+      }
     </AnimatePresence>
   )
 }

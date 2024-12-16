@@ -9,7 +9,7 @@ function SolidButton({children, onClick}: ButtonProps) {
       onClick={onClick}
       className={`w-[188px] h-[46px] px-4 py-1
       flex justify-center items-center
-      lg:text-[16px] text-xs
+      lg:text-[16px] text-md
       font-nyt
       font-[500]
       rounded-full
