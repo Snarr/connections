@@ -1,5 +1,4 @@
-
-interface ButtonProps {
+export interface ButtonProps {
   children: string,
   onClick: () => void,
   disabled: boolean
@@ -18,7 +17,7 @@ function Button({children, onClick, disabled}: ButtonProps) {
       font-[500]
       rounded-full
       border-solid border-[1px]
-      select-none
+      select-none 
       `}
       style={{borderColor: color, color: color, cursor: (disabled ? "default" : "pointer")}}
       >
