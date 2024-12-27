@@ -267,7 +267,7 @@ function App() {
           )}
         </div>
 
-        <div className="flex flex-row gap-3 p-2">
+        <div className="flex flex-row flex-wrap justify-center items-center gap-3 p-2">
           <Button onClick={shuffle} disabled={processingGuess || Object.keys(revealedCategories).length == 4}>Shuffle</Button>
           <Button onClick={deselectAll} disabled={processingGuess || selectedTiles.length == 0}>Deselect All</Button>
           <Button onClick={submitGuess} disabled={processingGuess || selectedTiles.length < 4}>Submit</Button>
