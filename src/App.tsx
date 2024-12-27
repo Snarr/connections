@@ -64,7 +64,7 @@ function App() {
   const [points, setPoints] = useState<number>(4)
   const [tileList, setTileList] = useState<string[]>(initialTileList)
   const [revealedCategories, setRevealedCategories] = useState<CategoryModel[]>([])
-  const [screen, setScreen] = useState<ScreenEnum>(ScreenEnum.Game)
+  const [screen, setScreen] = useState<ScreenEnum>(ScreenEnum.Splash)
   const [selectedTiles, setSelectedTiles] = useState<string[]>([])
   const [guesses, setGuesses] = useState<GuessModel[]>([])
   const [processingGuess, setProcessingGuess] = useState<boolean>(false)
