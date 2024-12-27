@@ -12,3 +12,11 @@ export type CategoryModel = {
   color: string,
   words: string[]
 }
+
+export type GuessModel = {
+  words: {
+    word: string,
+    category: string,
+  }[],
+  correct: boolean
+}

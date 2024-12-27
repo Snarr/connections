@@ -1,13 +1,12 @@
 
 import { AnimatePresence, motion } from 'motion/react'
-import type { TileModel } from './Types';
-
 interface TileProps {
-  tile: TileModel,
+  tile: string,
+  selected: boolean,
   toggleSelection: () => void
 }
 
-const Tile: React.FC<TileProps> = ({tile, toggleSelection}) => {
+const Tile: React.FC<TileProps> = ({tile, selected, toggleSelection}) => {
   return (
     <AnimatePresence>
       <motion.div
@@ -20,11 +19,11 @@ const Tile: React.FC<TileProps> = ({tile, toggleSelection}) => {
         font-nyt-bold font-bold text-wrap text-center 
         lg:leading-5 leading-3 `
         +
-        (tile.selected ? "bg-[#5A594E] text-[#FFFFFF]" : "bg-[#EFEFE6]")}
+        (selected ? "bg-[#5A594E] text-[#FFFFFF]" : "bg-[#EFEFE6]")}
         layout
         exit={{ opacity: 0 }}
       >
-        {tile.word.toUpperCase()}
+        {tile.toUpperCase()}
       </motion.div>
     </AnimatePresence>
   )
